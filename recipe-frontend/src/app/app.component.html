@@ -1,0 +1,214 @@
+<nav  class="navbar navbar-expand-lg navbar-dark bg-dark"  >
+  <a class="navbar-brand" style="color:white;">Recipe Manager</a>
+  <div class="collapse navbar-collapse" id="navbarColor02">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" (click)="onOpenModal(null, 'add')">Add Recipe <span class="sr-only">(current)</span></a>
+      </li>
+      <form class="form-inline my-2 my-lg-0">
+        <input type="search" (ngModelChange)="searchRecipes(key.value)" #key="ngModel" ngModel
+               name="key" id="searchName" class="form-control mr-sm-2" placeholder="Search recipes..." required>
+      </form>
+    </ul>
+  </div>
+</nav>
+
+<!-- Main Container -->
+<div style="margin-top: 40px;" class="container" id="main-container">
+
+  <!-- recipe list -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+        integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"/>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+          integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+          crossorigin="anonymous"></script>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div >
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th>Id</th>
+              <th>Name</th>
+              <th>Desc</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr
+              *ngFor="let recipe of recipes | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: totalItems }; let index = index">
+
+              <td>{{recipe.id}}</td>
+              <td>{{recipe.name}}</td>
+              <td>{{recipe.description}}</td>
+              <td style="width: 200px; align-content: center">
+                <div class="card-body">
+                  <div class="float-right btn-group btn-group-sm">
+                    <a (click)="onOpenModal(recipe, 'edit')" class="btn btn-primary tooltips" data-placement="top"
+                       data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+
+            </tbody>
+          </table>
+          <!-- Previous and Next page buttons -->
+          <div class="pagination-buttons">
+            <button [disabled]="currentPage === 0" (click)="previousPage()">Previous</button>
+            <button [disabled]="currentPage === totalPages-1" (click)="nextPage()">Next</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Recipe Modal -->
+  <div class="modal" id="addRecipeModal" tabindex="-1" role="dialog" aria-labelledby="addRecipeModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" style="background-color: lightgray">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addRecipeModalLabel">Add Recipe</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #addForm="ngForm" (ngSubmit)="onAddRecipe(addForm)">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name">
+            </div>
+            <div class="form-group">
+              <label for="description">Description</label>
+              <input type="text" ngModel name="description" class="form-control" id="description">
+            </div>
+
+            <h4>Ingredients:</h4>
+            <div class="form-group" style="border: 1px solid gray;margin:5px;">
+              <div *ngFor="let ingredient of ingredients; let i = index" style="margin:5px;">
+                <div class="form-group">
+                  <label for="ingredientName{{i}}">Ingredient Name:</label>
+                  <input type="text" id="name{{i}}" name="name{{i}}" [(ngModel)]="ingredient.name" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="ingredientAmount{{i}}">Amount:</label>
+                  <input type="number" id="amount{{i}}" name="amount{{i}}" [(ngModel)]="ingredient.amount" required>
+                  <button class="btn btn-sm btn-outline-secondary badge" type="button" (click)="removeIngredient(i)"><i
+                    class="fa fa-trash"></i></button>
+                </div>
+              </div>
+            </div>
+            <button type="button" (click)="addIngredient()" class="btn btn-secondary">Add Ingredient</button>
+
+            <div class="form-group">
+
+              <label for="description">time Required To Cook</label>
+              <input type="timeRequiredToCook" ngModel name="timeRequiredToCook" class="form-control"
+                     id="timeRequiredToCook" required>
+            </div>
+            <div class="form-group">
+              <div class="form-group">
+                <label for="typeOfMeal">Type of meal</label>
+                <select class="form-control" id="typeOfMeal" name="typeOfMeal"
+                        [(ngModel)]="selectedMealType">
+                  <option *ngFor="let typeOfMeal of typeOfMeals" [value]="typeOfMeal">{{ typeOfMeal }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="add-employee-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Recipe Modal -->
+  <div class="modal" id="updateRecipeModal" tabindex="-1" role="dialog" aria-hidden="true"
+       aria-labelledby="recipeEditModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" style="background-color: lightgray">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateRecipeModalLabel">Edit Recipe {{editRecipe?.name}}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form #editForm="ngForm">
+            <input type="hidden" ngModel="{{editRecipe?.id}}" name="id" class="form-control" id="id">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" ngModel="{{editRecipe?.name}}" name="name" class="form-control" id="name"
+                     placeholder="Name">
+            </div>
+            <div class="form-group">
+              <label for="description">Description</label>
+              <input type="text" ngModel="{{editRecipe?.description}}" name="description" class="form-control"
+                     id="description">
+            </div>
+            <h4>Ingredients:</h4>
+            <div class="form-group" style="border: 1px solid gray;margin:5px;">
+              <div *ngFor="let ingredient of ingredients; let i = index" style="margin:5px;">
+                <div class="form-group">
+                  <label for="ingredientName{{i}}">Ingredient Name:</label>
+                  <input type="text" id="name{{i}}" name="name{{i}}" [(ngModel)]="ingredient.name" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="ingredientAmount{{i}}">Amount:</label>
+                  <input type="number" id="amount{{i}}" name="amount{{i}}" [(ngModel)]="ingredient.amount" required>
+                  <button class="btn btn-sm btn-outline-secondary badge" type="button" (click)="removeIngredient(i)"><i
+                    class="fa fa-trash"></i></button>
+                </div>
+              </div>
+            </div>
+            <button type="button" (click)="addIngredient()" class="btn btn-secondary">Add Ingredient</button>
+
+            <div class="form-group">
+              <label for="timeRequiredToCook">Time required to cook</label>
+              <input type="number" ngModel="{{editRecipe?.timeRequiredToCook}}" name="timeRequiredToCook"
+                     class="form-control" id="timeRequiredToCook">
+            </div>
+            <div class="form-group">
+              <div class="form-group">
+                <label for="typeOfMeal">Type of meal</label>
+                <select class="form-control" id="typeOfMeal" name="typeOfMeal"
+                        [(ngModel)]="selectedMealType">
+                  <option *ngFor="let typeOfMeal of typeOfMeals" [value]="typeOfMeal">{{ typeOfMeal }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Close</button>
+              <button (click)="onupdateRecipe(editForm.value)" data-dismiss="modal" class="btn btn-primary">Save
+                changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Notification for no recipes -->
+<div *ngIf="recipes?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
+  <div class="alert alert-info" role="alert">
+    <h4 class="alert-heading">No Recipes!</h4>
+    <p>No recipes were found. Please add some recipes.</p>
+  </div>
+</div>
+
+

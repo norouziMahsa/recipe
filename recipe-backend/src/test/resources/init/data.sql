@@ -1,0 +1,2 @@
+INSERT INTO recipe (id, name, description, time_required_to_cook, type_of_meal)  VALUES(1, 'recipe1', 'description1', 25, 'DINNER');
+INSERT INTO ingredient (id, name, amount, recipe_ingredient_id) VALUES(1, 'ing1', 4, 1);
