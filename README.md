@@ -81,3 +81,32 @@ The app defines following APIs.
     PUT /recipe/{id} (update a recipe)
 
     GET /recipe/search (search recipes by name or partial name)
+
+## Some screenshots of the frontend
+
+Here you can find some screenshots of frontend that demonstrates how different functionalities work
+
+
+Recipe List
+
+
+![recipes_list](https://github.com/norouziMahsa/recipe/assets/67599259/9d52a8d0-e80a-411f-81e6-b9b32085cf13)
+
+
+
+Add Recipe
+
+![add_recipe](https://github.com/norouziMahsa/recipe/assets/67599259/88d97c28-cc51-4eaa-8ab0-24686300f2b5)
+
+
+
+Edit Recipe
+
+![edit_recipe](https://github.com/norouziMahsa/recipe/assets/67599259/8a20db14-a554-46cd-a22b-ca0944efc7a9)
+
+
+Search Recipe (by name)
+
+
+![recipe_search](https://github.com/norouziMahsa/recipe/assets/67599259/084a4a02-ca6e-4343-862e-3b9cfdf5aaff)
+
