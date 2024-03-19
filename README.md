@@ -44,7 +44,7 @@ The app will start running at <http://localhost:8080>
 
 You can find the APIs documentation for this application on
 
-<http://localhost:8080/swagger-ui.html/>
+<http://localhost:8080/swagger-ui.html>
 
 ## Steps to Setup Frontend
 
